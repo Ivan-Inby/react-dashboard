@@ -1,70 +1,115 @@
-# Getting Started with Create React App
+# Pie Chart Application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Простое приложение на React для отображения круговой диаграммы с использованием библиотеки recharts.
 
-## Available Scripts
+## Функциональность
 
-In the project directory, you can run:
+Приложение отображает круговую диаграмму с двумя сегментами, каждый из которых имеет свою цветовую схему. Сегменты помечены процентным соотношением, отображаемым внутри диаграммы.
 
-### `npm start`
+## Установка
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+1. Клонируйте репозиторий на ваше локальное устройство:
+    ```bash
+    git clone <url репозитория>
+    ```
+2. Перейдите в директорию проекта:
+    ```bash
+    cd <название папки с проектом>
+    ```
+3. Установите зависимости:
+    ```bash
+    npm install
+    ```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Использование
 
-### `npm test`
+Для запуска приложения выполните:
+```bash
+npm start
+```
+Это запустит сервер разработки и откроет приложение в вашем браузере по умолчанию.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Структура проекта
 
-### `npm run build`
+```bash
+src/
+├── App.js               # Главный компонент
+├── index.js             # Точка входа
+└── index.css            # CSS стили
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Обзор кода
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### App.js
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Главный компонент приложения отвечает за отображение круговой диаграммы с использованием данных и цветов, заданных в константах. Компонент включает кастомную метку, которая отображает процентное значение каждого сегмента диаграммы.
 
-### `npm run eject`
+```javascript
+import React from "react";
+import { PieChart, Pie, Cell } from "recharts";
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+const data = [
+  { name: "Group C", value: 300 },
+  { name: "Group D", value: 200 }
+];
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+const COLORS = ["#32CD32", "#FF0000"];
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+const RADIAN = Math.PI / 180;
+const renderCustomizedLabel = ({
+  cx,
+  cy,
+  midAngle,
+  innerRadius,
+  outerRadius,
+  percent,
+  index
+}) => {
+  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+  const x = cx + radius * Math.cos(-midAngle * RADIAN);
+  const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+  return (
+    <text
+      x={x}
+      y={y}
+      fill="white"
+      textAnchor={x > cx ? "start" : "end"}
+      dominantBaseline="central"
+    >
+      {`${(percent * 100).toFixed(0)}%`}
+    </text>
+  );
+};
 
-## Learn More
+const App = () => {
+  return (
+    <PieChart width={400} height={400}>
+      <Pie
+        data={data}
+        cx={200}
+        cy={200}
+        labelLine={false}
+        label={renderCustomizedLabel}
+        outerRadius={80}
+        fill="#8884d8"
+        dataKey="value"
+      >
+        {data.map((entry, index) => (
+          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+        ))}
+      </Pie>
+    </PieChart>
+  );
+};
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+export default App;
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Взаимодействие с API
 
-### Code Splitting
+В данном проекте взаимодействие с API не предусмотрено.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Управление состоянием
 
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Управление состоянием в данном проекте не требуется, так как данные диаграммы статичны.
