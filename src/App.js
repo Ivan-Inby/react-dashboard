@@ -1,9 +1,7 @@
-//import "./styles.css";
-//import React, { useCallback, useState } from "react";
+import React from "react";
 import { PieChart, Pie, Cell } from "recharts";
 
 const data = [
-
   { name: "Group C", value: 300 },
   { name: "Group D", value: 200 }
 ];
@@ -19,7 +17,7 @@ const renderCustomizedLabel = ({
   outerRadius,
   percent,
   index
-}: any) => {
+}) => {
   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
@@ -36,7 +34,8 @@ const renderCustomizedLabel = ({
     </text>
   );
 };
-export default function App() {
+
+const App = () => {
   return (
     <PieChart width={400} height={400}>
       <Pie
@@ -55,4 +54,6 @@ export default function App() {
       </Pie>
     </PieChart>
   );
-}
+};
+
+export default App;
